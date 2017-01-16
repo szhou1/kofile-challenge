@@ -8,7 +8,7 @@ var orders = JSON.parse(fs.readFileSync('orders.json'));
 // console.log(orders);
 
 orders.forEach(function(order) {
-  console.log('Order ID: ', order.order_number);
+  console.log('Order ID:', order.order_number);
   var orderPrice = 0.00;
 
   order.order_items.forEach(function(item) {

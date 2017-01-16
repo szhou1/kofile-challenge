@@ -3,12 +3,12 @@ var fs = require('fs');
 var fees = JSON.parse(fs.readFileSync('fees.json'));
 var orders = JSON.parse(fs.readFileSync('orders.json'));
 
-var totalDistributions = [];
+var totalDistributions = {};
 
 orders.forEach(function(order) {
-  console.log('Order ID: ', order.order_number);
+  console.log('Order ID:', order.order_number);
 
-  var distributions = [];
+  var distributions = {};
   
   order.order_items.forEach(function(item) {
     fees.forEach(function(feeCatType) {
@@ -19,11 +19,13 @@ orders.forEach(function(order) {
         feeCatType.distributions.forEach(function(distr) {
           var amount = parseFloat(distr.amount);
           price -= amount;
-          distributions[distr.name] = amount;
+          distributions[distr.name] 
+            ? distributions[distr.name] = distributions[distr.name] + amount
+            : distributions[distr.name] = amount;
 
           totalDistributions[distr.name] 
             ? totalDistributions[distr.name] = totalDistributions[distr.name] + amount
-            : totalDistributions[distr.name] = amount
+            : totalDistributions[distr.name] = amount;
 
         });
         if(price > 0) {
@@ -31,12 +33,20 @@ orders.forEach(function(order) {
 
           totalDistributions['Other'] 
             ? totalDistributions['Other'] = totalDistributions['Other'] + price
-            : totalDistributions['Other'] = price
+            : totalDistributions['Other'] = price;
         }
 
-        console.log(distributions)
       }
     })
+  });
+
+  Object.keys(distributions).forEach(function(fund) {
+    console.log('  Fund -', fund + ': $' + distributions[fund]);
   })
+
 });
-console.log(totalDistributions);
+
+console.log('Total Distributions:')
+Object.keys(totalDistributions).forEach(function(fund) {
+  console.log('  Fund -', fund + ': $' + totalDistributions[fund]);
+})
