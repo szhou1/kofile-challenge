@@ -2,6 +2,9 @@ var fs = require('fs');
 
 var fees = JSON.parse(fs.readFileSync('./data/fees.json'));
 
+//**************************
+// Takes in orders and returns the associated fees
+//**************************
 var getFees = (req, res) => {
 
   if(!req || !req.body.length) {
@@ -25,14 +28,14 @@ var getFees = (req, res) => {
             itemPrice += parseFloat(feeCatType.fees[1].amount) * (item.pages - 1);
           }
           orderPrice += itemPrice;
-          item['item_price'] = Math.round(itemPrice * 100) / 100;
+          item['item_price'] = roundTo2Decimals(itemPrice);
         }
       });
     });
     result.push({
       order_id: order.order_number,
       order_date: order.order_date,
-      order_price: Math.round(orderPrice * 100) / 100,
+      order_price: roundTo2Decimals(orderPrice),
       order_items: order.order_items.map(function(item) {
         return item;
       })
@@ -42,6 +45,10 @@ var getFees = (req, res) => {
   res.send(result);
 }
 
+
+//**************************
+// Takes in orders and returns the fund distributions
+//**************************
 var getDistributions = (req, res) => {
 
   if(!req || !req.body.length) {
@@ -88,7 +95,7 @@ var getDistributions = (req, res) => {
             found = false;
             totalDistributions.forEach((fund) => {
               if(fund.name === distr.name) {
-                fund.amount = Math.round((fund.amount + amount) * 100) /100;
+                fund.amount = roundTo2Decimals(fund.amount + amount);
                 found = true;
               }
             });
@@ -96,7 +103,7 @@ var getDistributions = (req, res) => {
             if(!found) {
               totalDistributions.push({
                 name: distr.name,
-                amount: Math.round(amount * 100) / 100
+                amount: roundTo2Decimals(amount)
               })
             }
 
@@ -120,10 +127,14 @@ var getDistributions = (req, res) => {
 
   totalDistributions.push({
     name: "Other",
-    amount: Math.round(totalOtherAmount * 100) / 100
+    amount: roundTo2Decimals(totalOtherAmount)
   });
 
   res.send(result);
+}
+
+var roundTo2Decimals = (num) => {
+  return Math.round(num * 100) / 100;
 }
 
 module.exports = {
