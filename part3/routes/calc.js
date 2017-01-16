@@ -2,22 +2,22 @@ var fs = require('fs');
 
 var fees = JSON.parse(fs.readFileSync('./data/fees.json'));
 
-var getFees = function(req, res) {
+var getFees = (req, res) => {
 
   if(!req || !req.body.length) {
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
 
   var result = [];
   var orders = req.body;
 
-  orders.forEach(function(order) {
+  orders.forEach((order) => {
     var orderPrice = 0.00;
 
-    order.order_items.forEach(function(item) {
+    order.order_items.forEach((item) => {
       var itemPrice = 0.00;
 
-      fees.forEach(function(feeCatType) {
+      fees.forEach((feeCatType) => {
         if(feeCatType.order_item_type === item.type){
           itemPrice += parseFloat(feeCatType.fees[0].amount);
 
@@ -42,10 +42,10 @@ var getFees = function(req, res) {
   res.send(result);
 }
 
-var getDistributions = function(req, res) {
+var getDistributions = (req, res) => {
 
   if(!req || !req.body.length) {
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
 
   var totalDistributions = [];
@@ -56,22 +56,22 @@ var getDistributions = function(req, res) {
     totalDistributions: totalDistributions
   };
 
-  orders.forEach(function(order) {
+  orders.forEach((order) => {
 
     var distributions = [];
     
-    order.order_items.forEach(function(item) {
-      fees.forEach(function(feeCatType) {
+    order.order_items.forEach((item) => {
+      fees.forEach((feeCatType) => {
         if(feeCatType.order_item_type === item.type) {
           
           var price = feeCatType.fees[0].amount;
           
-          feeCatType.distributions.forEach(function(distr) {
+          feeCatType.distributions.forEach((distr) => {
             var amount = parseFloat(distr.amount);
             price -= amount;
 
             var found = false;
-            distributions.forEach(function(fund) {
+            distributions.forEach((fund) => {
               if(fund.name === distr.name) {
                 fund.amount += amount;
                 found = true;
@@ -86,7 +86,7 @@ var getDistributions = function(req, res) {
             }
 
             found = false;
-            totalDistributions.forEach(function(fund) {
+            totalDistributions.forEach((fund) => {
               if(fund.name === distr.name) {
                 fund.amount = Math.round((fund.amount + amount) * 100) /100;
                 found = true;

@@ -9,7 +9,7 @@ app.post('/order/fees', calc.getFees);
 
 app.post('/order/distr', calc.getDistributions);
 
-app.listen(3000, function() {
+app.listen(3000, () => {
   console.log('Listening to port 3000');
 });
 

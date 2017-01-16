@@ -7,16 +7,15 @@ chai.use(chaiHttp);
 
 var Calc = require('../routes/calc');
 
-describe('Calc', function() {
+describe('Calc', () => {
 
-  describe('#getFees()', function() {
-    it('should return 200 status code', function(done) {
+  describe('#getFees()', () => {
+    it('should return 400 status code if no body is passed in', () => {
       chai.request(server)
-        .post('order/fees')
-        .send({})
+        .post('/order/fees')
         .then((res) => {
-          expect(res).to.have.status(200);
-          done();
+          expect(res).to.have.status(400);
+        }).catch((e) => {
         });
     });
   });
