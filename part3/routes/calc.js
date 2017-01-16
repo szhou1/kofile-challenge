@@ -5,7 +5,6 @@ var orders = JSON.parse(fs.readFileSync('./data/orders.json'));
 
 var getFees = function(req, res) {
 
-
   var result = [];
 
   orders.forEach(function(order) {
@@ -22,14 +21,14 @@ var getFees = function(req, res) {
             itemPrice += parseFloat(feeCatType.fees[1].amount) * (item.pages - 1);
           }
           orderPrice += itemPrice;
-          item['item_price'] = itemPrice.toFixed(2);
+          item['item_price'] = Math.round(itemPrice * 100) / 100;
         }
       });
     });
     result.push({
       order_id: order.order_number,
       order_date: order.order_date,
-      order_price: orderPrice.toFixed(2),
+      order_price: Math.round(orderPrice * 100) / 100,
       order_items: order.order_items.map(function(item) {
         return item;
       })
@@ -49,7 +48,6 @@ var getDistributions = function(req, res) {
   };
 
   orders.forEach(function(order) {
-    console.log('Order ID:', order.order_number);
 
     var distributions = [];
     
@@ -70,6 +68,7 @@ var getDistributions = function(req, res) {
                 found = true;
               }
             });
+            
             if(!found) {
               distributions.push({
                 name: distr.name,
@@ -81,10 +80,10 @@ var getDistributions = function(req, res) {
             totalDistributions.forEach(function(fund) {
               if(fund.name === distr.name) {
                 fund.amount = Math.round((fund.amount + amount) * 100) /100;
-                console.log(fund.amount)
                 found = true;
               }
             });
+
             if(!found) {
               totalDistributions.push({
                 name: distr.name,
@@ -93,6 +92,7 @@ var getDistributions = function(req, res) {
             }
 
           });
+
           if(price > 0) {
             distributions['Other'] = price;
             totalOtherAmount += price;
@@ -111,7 +111,7 @@ var getDistributions = function(req, res) {
 
   totalDistributions.push({
     name: "Other",
-    amount: totalOtherAmount.toFixed(2)
+    amount: Math.round(totalOtherAmount * 100) / 100
   });
 
   res.send(result);
