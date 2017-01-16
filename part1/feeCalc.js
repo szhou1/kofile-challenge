@@ -1,11 +1,7 @@
 var fs = require('fs');
 
-
 var fees = JSON.parse(fs.readFileSync('../fees.json'));
 var orders = JSON.parse(fs.readFileSync('../orders.json'));
-
-// console.log(fees);
-// console.log(orders);
 
 orders.forEach(function(order) {
   console.log('Order ID:', order.order_number);
