@@ -1,11 +1,15 @@
 var fs = require('fs');
 
 var fees = JSON.parse(fs.readFileSync('./data/fees.json'));
-var orders = JSON.parse(fs.readFileSync('./data/orders.json'));
 
 var getFees = function(req, res) {
 
+  if(!req || !req.body.length) {
+    res.sendStatus(400);
+  }
+
   var result = [];
+  var orders = req.body;
 
   orders.forEach(function(order) {
     var orderPrice = 0.00;
@@ -40,8 +44,13 @@ var getFees = function(req, res) {
 
 var getDistributions = function(req, res) {
 
+  if(!req || !req.body.length) {
+    res.sendStatus(400);
+  }
+
   var totalDistributions = [];
   var totalOtherAmount = 0.00;
+  var orders = req.body;
   var result = {
     orders: [],
     totalDistributions: totalDistributions

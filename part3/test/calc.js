@@ -12,7 +12,7 @@ describe('Calc', function() {
   describe('#getFees()', function() {
     it('should return 200 status code', function(done) {
       chai.request(server)
-        .post('/fees')
+        .post('order/fees')
         .send({})
         .then((res) => {
           expect(res).to.have.status(200);
