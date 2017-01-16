@@ -1,8 +1,8 @@
 var fs = require('fs');
 
 
-var fees = JSON.parse(fs.readFileSync('fees.json'));
-var orders = JSON.parse(fs.readFileSync('orders.json'));
+var fees = JSON.parse(fs.readFileSync('../fees.json'));
+var orders = JSON.parse(fs.readFileSync('../orders.json'));
 
 // console.log(fees);
 // console.log(orders);
